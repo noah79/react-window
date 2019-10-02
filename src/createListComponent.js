@@ -78,6 +78,7 @@ export type Props<T> = {|
   style?: Object,
   useIsScrolling: boolean,
   width: number | string,
+  scrollingDebounceInterval?: number,
 |};
 
 type State = {|
@@ -119,8 +120,6 @@ type GetStopIndexForStartIndex = (
 ) => number;
 type InitInstanceProps = (props: Props<any>, instance: any) => any;
 type ValidateProps = (props: Props<any>) => void;
-
-const IS_SCROLLING_DEBOUNCE_INTERVAL = 150;
 
 const defaultItemKey = (index: number, data: any) => index;
 
@@ -167,6 +166,7 @@ export default function createListComponent({
       layout: 'vertical',
       overscanCount: 2,
       useIsScrolling: false,
+      scrollingDebounceInterval: 150,
     };
 
     state: State = {
@@ -591,7 +591,7 @@ export default function createListComponent({
     };
 
     _outerRefSetter = (ref: any): void => {
-      const { outerRef } = this.props;
+      const { outerRef, scrollingDebounceInterval } = this.props;
 
       this._outerRef = ((ref: any): HTMLDivElement);
 
@@ -613,7 +613,7 @@ export default function createListComponent({
 
       this._resetIsScrollingTimeoutId = requestTimeout(
         this._resetIsScrolling,
-        IS_SCROLLING_DEBOUNCE_INTERVAL
+        scrollingDebounceInterval
       );
     };
 
